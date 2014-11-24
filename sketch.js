@@ -3,14 +3,19 @@ var nx = 20,
     a = [],
     b = [],
     c = [],
-    backgroundImage,
+    sound,
+    fft,
     i,
     j;
 
+function preload(){
+ sound = loadSound('assets/lemoncreme.wav');
+}
 function setup() {
   createCanvas(1024, 768);
   noStroke();
   smooth();
+  sound.loop();
 
   for(i = 0; i < nx; i++){
     a[i] = [];
