@@ -1,14 +1,14 @@
-var nx = 20,
-  ny = 20,
-  a = [],
-  b = [],
-  c = [],
+var numberOfStarGroups = 20,
+  numberOfStarsPerGroup = 20,
+  innerRing = [],
+  middleRing = [],
+  outerRing = [],
   threshold = 15,
   song,
   fft,
   avgFreqEnergy,
-  i,
-  j;
+  starGroupIndex,
+  starIndex;
 
 function preload() {
   song = loadSound('assets/lemoncreme.wav');
@@ -20,15 +20,15 @@ function setup() {
   song.loop();
   fft = new p5.FFT();
 
-  for (i = 0; i < nx; i++) {
-    a[i] = [];
-    b[i] = [];
-    c[i] = [];
+  for (starGroupIndex = 0; starGroupIndex < numberOfStarGroups; starGroupIndex++) {
+    innerRing[starGroupIndex] = [];
+    middleRing[starGroupIndex] = [];
+    outerRing[starGroupIndex] = [];
 
-    for (j = 0; j < ny; j++) {
-      a[i][j] = new Dong(65, 150);
-      b[i][j] = new Dong(165, 250);
-      c[i][j] = new Dong(265, 350);
+    for (starIndex = 0; starIndex < numberOfStarsPerGroup; starIndex++) {
+      innerRing[starGroupIndex][starIndex] = new Dong(65, 150);
+      middleRing[starGroupIndex][starIndex] = new Dong(165, 250);
+      outerRing[starGroupIndex][starIndex] = new Dong(265, 350);
     }
   }
 }
@@ -42,13 +42,13 @@ function draw() {
   avgFreqEnergy = fft.getEnergy(20, 14000);
 
   if (avgFreqEnergy > threshold) {
-    randomCircleC = c[floor(random(15))][floor(random(15))];
+    randomCircleC = outerRing[floor(random(15))][floor(random(15))];
     randomCircleC.isPicked = true;
     randomCircleC.update(avgFreqEnergy*random(4));
   } else {
-    randomCircleB = b[floor(random(10))][floor(random(10))];
+    randomCircleB = middleRing[floor(random(10))][floor(random(10))];
     randomCircleB.isPicked = true;
-    randomCircleA = a[floor(random(5))][floor(random(5))];
+    randomCircleA = innerRing[floor(random(5))][floor(random(5))];
     randomCircleA.isPicked = true;
     randomCircleA.update(avgFreqEnergy);
   }
@@ -56,40 +56,41 @@ function draw() {
   clear();
   translate(width / 2, height / 2);
   rotate(frameCount * 0.001);
-  for (i = 0; i < nx; i++) {
-    for (j = 0; j < ny; j++) {
-      a[i][j].display();
-      b[i][j].display();
-      c[i][j].display();
+  for (starGroupIndex = 0; starGroupIndex < numberOfStarGroups; starGroupIndex++) {
+    for (starIndex = 0; starIndex < numberOfStarsPerGroup; starIndex++) {
+      innerRing[starGroupIndex][starIndex].display();
+      middleRing[starGroupIndex][starIndex].display();
+      outerRing[starGroupIndex][starIndex].display();
     }
   }
 }
 
 function Dong(circleSizeMin, circleSizeMax) {
-  var isPicked = false,
-    f = random(-Math.PI, Math.PI),
-    s0 = random(2, 6),
-    s1 = 0,
-    x,
-    y;
+  var randomAngle = random(-Math.PI, Math.PI),
+    initialSize = random(2, 6),
+    tempModifiedSize = 0,
+    xCoordinate,
+    yCoordinate;
 
-  x = cos(f) * random(circleSizeMin, circleSizeMax);
-  y = sin(f) * random(circleSizeMin, circleSizeMax);
+  xCoordinate = cos(randomAngle) * random(circleSizeMin, circleSizeMax);
+  yCoordinate = sin(randomAngle) * random(circleSizeMin, circleSizeMax);
+
+  this.isPicked = false;
 
   this.display = function display() {
-    if (!isPicked) {
+    if (!this.isPicked) {
       fill(255);
     } else {
       fill(69, 243, 255, 255);
     }
-    s1 += (s0 - s1) * 0.1;
-    ellipse(x, y, s1, s1);
+    tempModifiedSize += (initialSize - tempModifiedSize) * 0.1;
+    ellipse(xCoordinate, yCoordinate, tempModifiedSize, tempModifiedSize);
   };
 
 
   this.update = function update(size) {
-    if (isPicked = true) {
-      s1 = size;
+    if (this.isPicked = true) {
+      tempModifiedSize = size;
     }
   };
 }
