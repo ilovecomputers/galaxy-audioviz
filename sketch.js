@@ -3,19 +3,22 @@ var nx = 20,
   a = [],
   b = [],
   c = [],
-  sound,
+  threshold = 15,
+  song,
   fft,
+  avgFreqEnergy,
   i,
   j;
 
 function preload() {
-  sound = loadSound('assets/lemoncreme.wav');
+  song = loadSound('assets/lemoncreme.wav');
 }
 function setup() {
   createCanvas(1024, 768);
   noStroke();
   smooth();
-  sound.loop();
+  song.loop();
+  fft = new p5.FFT();
 
   for (i = 0; i < nx; i++) {
     a[i] = [];
@@ -31,6 +34,25 @@ function setup() {
 }
 
 function draw() {
+  var randomCircleA,
+    randomCircleB,
+    randomCircleC;
+
+  fft.analyze();
+  avgFreqEnergy = fft.getEnergy(20, 14000);
+
+  if (avgFreqEnergy > threshold) {
+    randomCircleC = c[floor(random(15))][floor(random(15))];
+    randomCircleC.isPicked = true;
+    randomCircleC.update(avgFreqEnergy*random(4));
+  } else {
+    randomCircleB = b[floor(random(10))][floor(random(10))];
+    randomCircleB.isPicked = true;
+    randomCircleA = a[floor(random(5))][floor(random(5))];
+    randomCircleA.isPicked = true;
+    randomCircleA.update(avgFreqEnergy);
+  }
+
   clear();
   translate(width / 2, height / 2);
   rotate(frameCount * 0.001);
