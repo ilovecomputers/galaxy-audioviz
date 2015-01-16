@@ -1,5 +1,7 @@
 # Galaxy Audio Visualizer
 
+[_DEMO_](http://codepen.io/ilovecomputers/pen/YPXPXe)
+
 This is a JS fork of [rroseu's Processing Sketch](https://github.com/rroseu/galaxy-audioviz).
 
 I used [p5.js](http://p5js.org/) to aid in my porting. P5.js makes Processing web native. Not only does it provide drawing functionality, but a [Web Audio library](http://p5js.org/reference/#/libraries/p5.sound). This Web Audio library is crucial for the beat detection as that involves [frequency energy measurement](http://p5js.org/reference/#/p5.FFT/getEnergy).
