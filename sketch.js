@@ -1,13 +1,11 @@
-var numberOfStarGroups = 20,
-  numberOfStarsPerGroup = 20,
+var NUMBER_OF_STARS = 400,
+  THRESHOLD = 15,
   innerRing = [],
   middleRing = [],
   outerRing = [],
-  threshold = 15,
   song,
   fft,
   avgFreqEnergy,
-  starGroupIndex,
   starIndex;
 
 function preload() {
@@ -20,17 +18,12 @@ function setup() {
   song.loop();
   fft = new p5.FFT();
 
-  for (starGroupIndex = 0; starGroupIndex < numberOfStarGroups; starGroupIndex++) {
-    innerRing[starGroupIndex] = [];
-    middleRing[starGroupIndex] = [];
-    outerRing[starGroupIndex] = [];
-
-    for (starIndex = 0; starIndex < numberOfStarsPerGroup; starIndex++) {
-      innerRing[starGroupIndex][starIndex] = new Dong(65, 150);
-      middleRing[starGroupIndex][starIndex] = new Dong(165, 250);
-      outerRing[starGroupIndex][starIndex] = new Dong(265, 350);
-    }
+  for (starIndex = 0; starIndex < NUMBER_OF_STARS; starIndex++) {
+    innerRing[starIndex] = new Dong(65, 150);
+    middleRing[starIndex] = new Dong(165, 250);
+    outerRing[starIndex] = new Dong(265, 350);
   }
+
 }
 
 function draw() {
@@ -41,14 +34,14 @@ function draw() {
   fft.analyze();
   avgFreqEnergy = fft.getEnergy(20, 14000);
 
-  if (avgFreqEnergy > threshold) {
-    randomCircleC = outerRing[floor(random(15))][floor(random(15))];
+  if (avgFreqEnergy > THRESHOLD) {
+    randomCircleC = outerRing[floor(random(225))];
     randomCircleC.isPicked = true;
     randomCircleC.update(avgFreqEnergy*random(4));
   } else {
-    randomCircleB = middleRing[floor(random(10))][floor(random(10))];
+    randomCircleB = middleRing[floor(random(100))];
     randomCircleB.isPicked = true;
-    randomCircleA = innerRing[floor(random(5))][floor(random(5))];
+    randomCircleA = innerRing[floor(random(25))];
     randomCircleA.isPicked = true;
     randomCircleA.update(avgFreqEnergy);
   }
@@ -56,12 +49,10 @@ function draw() {
   clear();
   translate(width / 2, height / 2);
   rotate(frameCount * 0.001);
-  for (starGroupIndex = 0; starGroupIndex < numberOfStarGroups; starGroupIndex++) {
-    for (starIndex = 0; starIndex < numberOfStarsPerGroup; starIndex++) {
-      innerRing[starGroupIndex][starIndex].display();
-      middleRing[starGroupIndex][starIndex].display();
-      outerRing[starGroupIndex][starIndex].display();
-    }
+  for (starIndex = 0; starIndex < NUMBER_OF_STARS; starIndex++) {
+    innerRing[starIndex].display();
+    middleRing[starIndex].display();
+    outerRing[starIndex].display();
   }
 }
 
