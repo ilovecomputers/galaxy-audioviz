@@ -19,9 +19,9 @@ function setup() {
   fft = new p5.FFT();
 
   for (starIndex = 0; starIndex < NUMBER_OF_STARS; starIndex++) {
-    innerRing[starIndex] = new Dong(65, 150);
-    middleRing[starIndex] = new Dong(165, 250);
-    outerRing[starIndex] = new Dong(265, 350);
+    innerRing[starIndex] = new Star(65, 150);
+    middleRing[starIndex] = new Star(165, 250);
+    outerRing[starIndex] = new Star(265, 350);
   }
 
 }
@@ -56,7 +56,7 @@ function draw() {
   }
 }
 
-function Dong(circleSizeMin, circleSizeMax) {
+function Star(circleSizeMin, circleSizeMax) {
   var randomAngle = random(-Math.PI, Math.PI),
     initialSize = random(2, 6),
     tempModifiedSize = 0,
