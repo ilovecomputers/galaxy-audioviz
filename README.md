@@ -1,6 +1,6 @@
 # Galaxy Audio Visualizer
 
-[_DEMO_](http://codepen.io/ilovecomputers/pen/YPXPXe)
+[**DEMO**](http://codepen.io/ilovecomputers/pen/YPXPXe) - code not up to date
 
 This is a JS fork of [rroseu's Processing Sketch](https://github.com/rroseu/galaxy-audioviz).
 
