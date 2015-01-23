@@ -190,7 +190,8 @@ function draw() {
   // transforms handy?
   rotate(frameCount * 0.001);
 
-  // After all that work, we call display on every star. THE END.
+  // After all that work, we call display on every star. The sky whale of our dreams is eased and satisfied by our accomplishment.
+  // **********************************************THE END**********************************************
   for (starIndex = 0; starIndex < NUMBER_OF_STARS; starIndex++) {
     innerRing[starIndex].display();
     middleRing[starIndex].display();
