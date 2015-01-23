@@ -93,6 +93,8 @@ function Star(minDistanceFromGalaxyCenter, maxDistanceFromGalaxyCenter) {
   };
 }
 
+// All of these randomly generated Stars will be stored and tracked in these arrays representing each of the rings in
+// the galaxy
 var innerRing = [],
   middleRing = [],
   outerRing = [],
@@ -103,18 +105,32 @@ var innerRing = [],
   starIndex;
 
 /**
- * Before we even load our galaxy,
+ * Before we even load our galaxy, we download our song
  */
 function preload() {
   song = loadSound('assets/lemoncreme.wav');
 }
+
+/**
+ * Now we setup our processing sketch
+ */
 function setup() {
+
+  // Here are the standard functions you first call in a processing sketch.
   createCanvas(1024, 768);
   noStroke();
   smooth();
+
+  // However, these are new. This is the audio stuff. We first loop our song. Unlike our animations, we don't have to
+  // keep that loop going by calling a command in draw(). Like a music player, we press play once and it loops forever.
   song.loop();
+
+  // Now we patch in the Fast Fourier Transform (FFT) into our audio channel. FFT is the mathematical function that
+  // will provide us the frequency information about our audio, such as the average energy.
   fft = new p5.FFT();
 
+  // With the audio setup, we generate our stars within each ring. Here, finally, we pass in that restricting range to
+  // prevent the rings from overlapping.
   for (starIndex = 0; starIndex < NUMBER_OF_STARS; starIndex++) {
     innerRing[starIndex] = new Star(65, 150);
     middleRing[starIndex] = new Star(165, 250);
@@ -123,29 +139,58 @@ function setup() {
 
 }
 
+/**
+ * Now we reach the function that loops indefinitely to create our animation
+ */
 function draw() {
   var randomCircleA,
     randomCircleB,
     randomCircleC;
 
+  // We analyze the audio and then get the average energy of the audio at the frequency range 20Hz-14000Hz
   fft.analyze();
   avgFreqEnergy = fft.getEnergy(20, 14000);
 
+  // Let's imagine for a moment that sky whales exist beyond our dreams and our average energy has gone past our
+  // THRESHOLD. At this moment, we pick a random star in our outer ring, but not just any star in this ring...
   if (avgFreqEnergy > THRESHOLD) {
+
+    // but only a special select few. Okay, it's the first 225 stars in our array, nothing really special there.
     randomCircleC = outerRing[floor(random(225))];
+
+    // Anyways, we pick it...
     randomCircleC.isPicked = true;
+
+    // ...and set the size to our average energy times a random number less than 4.
     randomCircleC.update(avgFreqEnergy*random(4));
   } else {
+
+    // Now if we never go past our THRESHOLD and face the reality that sky whales will never exit in reality, we pick
+    // a random star in the middle and inner ring. The star in the middle ring just turns blue.
     randomCircleB = middleRing[floor(random(100))];
     randomCircleB.isPicked = true;
+
+    // A star's size in the inner ring is set to the average energy. That's why it doesn't get as big as the picked stars
+    // in the outer ring. I know right? How unfair, but that's life. Our stars in the outer ring get the largest size and
+    // star whales don't exist. NO I'M NOT BITTER.
     randomCircleA = innerRing[floor(random(25))];
     randomCircleA.isPicked = true;
     randomCircleA.update(avgFreqEnergy);
   }
 
+  // Finally our star properties are set, we are ready to draw. Before we do that, we need to clear the stars from the
+  // previous call to draw or else everything just...smears.
   clear();
+
+  // If you remove the code below, our galaxy ends up centered on the upper left corner. Give it a try if you are curious.
   translate(width / 2, height / 2);
+
+  // If you made it this far and still wondered how the heck the galaxy rotates if the stars themselves have no such logic?
+  // Well wonder no more, we simply call a rotate function who's value changes when the frameCount increases. Aren't
+  // transforms handy?
   rotate(frameCount * 0.001);
+
+  // After all that work, we call display on every star. THE END.
   for (starIndex = 0; starIndex < NUMBER_OF_STARS; starIndex++) {
     innerRing[starIndex].display();
     middleRing[starIndex].display();
