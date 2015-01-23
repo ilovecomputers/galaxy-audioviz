@@ -3,7 +3,11 @@
   both follow the same pattern for programming graphics. This pattern is simply to run the same function over and
   over (that function is called draw, which we would get to later). In that function we have drawing commands, like ellipse,
   who's values might change at each loop. This is what allows animation to occur.
+
+  Unlike processing, p5.js wires into browser technologies. This means we have access to web audio, which allows us to
+  analyze audio.
  */
+
 var NUMBER_OF_STARS = 400,
 
   // We detect beat by the taking the average energy of all the, or a specific range of, frequencies. When that average
@@ -24,7 +28,7 @@ var NUMBER_OF_STARS = 400,
  *
  * If you notice, when we create a star, we only pass in the minimum and maximum distance a star can be from the center
  * of the galaxy. That's because we randomly generate stars at each ring in the galaxy and we want to restrict each randomly
- * generated star within a radial coordinate range, so that each ring doesn't intersect each other.
+ * generated star within a radial coordinate range, so that each ring doesn't overlap with the other.
  */
 function Star(minDistanceFromGalaxyCenter, maxDistanceFromGalaxyCenter) {
 
@@ -47,23 +51,23 @@ function Star(minDistanceFromGalaxyCenter, maxDistanceFromGalaxyCenter) {
   // a random star becomes a giant blue star. A star's properties are set to change to big and blue when this
   // isPicked property is set to true. Sorry, I lied there a bit. The star doesn't just magically become big when this
   // property is true, we're just given access to change its size, which will be set to the average energy of the audio's
-  // frequencies.
+  // frequencies in a later code.
   //
-  // Here's another thing, if you look around in this code, we never set isPicked back to false. It remains blue. Was
+  // Here's another thing, if you look around in this code, we never set isPicked back to false. A star remains blue. Was
   // that a mistake? Of course not! The sky whale asked for it. All glory to the wise sky whale!
   this.isPicked = false;
 
   // Here is where we set the size of the star and as was mentioned before, this is only allowed when the star is picked.
-  // You're also wondering why we called the size variable _temporary_ Modfied Size. If you look back at the demo, the star's shrink
-  // once they get big. That shrinking is done inside our Star object. You'll find a function in display() that does this shrinking.
+  // You're also wondering why we called the size variable _Temporary_ Modified Size. If you look back at the demo, the star's shrink
+  // once they get big, so this modified size is only temporary.
   this.update = function update(size) {
     if (this.isPicked = true) {
       tempModifiedSize = size;
     }
   };
 
-  // We finally reach the nucleus of our star. It's not a fusion reactor, but processing drawing commands based on our generated
-  // polar coordinates.
+  // That shrinking is done here, inside our Star object's display() function. This here is the nucleus of our star.
+  // It's not a fusion reactor, but you will find processing drawing commands based on our generated polar coordinates.
   this.display = function display() {
 
     // Here is where we set the color blue when our star is picked.
@@ -79,7 +83,7 @@ function Star(minDistanceFromGalaxyCenter, maxDistanceFromGalaxyCenter) {
     // our star never changes.
     //
     // By the way, because of floating points, initialSize and tempModifiedSize never become equal. Like y = 1/x, it
-    // approaches 0, but never reaches it. Nonetheless, any the time tempModifiedSize deviates away from the initialSize
+    // approaches 0, but never reaches it. Nonetheless, anytime tempModifiedSize deviates away from the initialSize
     // value, this function will pull it back to that value at each draw() loop, giving us our shrinking animation.
     tempModifiedSize += (initialSize - tempModifiedSize) * 0.1;
 
